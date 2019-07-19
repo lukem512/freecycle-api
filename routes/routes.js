@@ -5,10 +5,11 @@ const USAGE = `
   <p>The following RESTful endpoints are available:</p>
   <ul>
     <li>/posts/:group</li>
-    <li>/posts/:group/:type</li>
+    <li>/posts/:group/:results</li>
+    <li>/posts/:group/:results/:type</li>
     <li>/post/:group/:id</li>
   </ul>
-  <p>where :group, :type and :id are variables determining the group name, post type ("offer", "wanted" or "all") and post id.</p>
+  <p>where :group, :results, :type and :id are variables determining the group name, number of post results (>= 10), post type ("offer", "wanted" or "all") and post id.</p>
   `
 
 const getPosts = ({ group, resultsPerPage, type = freecycle.TYPE.offer }, res) => {
