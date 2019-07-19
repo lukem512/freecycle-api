@@ -1,6 +1,17 @@
 const freecycle = require('freecycle')
 
-const getPosts = ({ group, type = freecycle.TYPE.offer }, res) => {
+const USAGE = `
+  <h1>Freecycle API</h1>
+  <p>The following RESTful endpoints are available:</p>
+  <ul>
+    <li>/posts/:group</li>
+    <li>/posts/:group/:type</li>
+    <li>/post/:group/:id</li>
+  </ul>
+  <p>where :group, :type and :id are variables determining the group name, post type ("offer", "wanted" or "all") and post id.</p>
+  `
+
+const getPosts = ({ group, resultsPerPage, type = freecycle.TYPE.offer }, res) => {
   if (!group || group === '') {
     return res.status(400).send('Invalid group specified')
   }
@@ -15,25 +26,17 @@ const getPosts = ({ group, type = freecycle.TYPE.offer }, res) => {
       return res.status(500).send('Unable to retrieve posts')
     }
     return res.send(posts)
-  }, type)
+  }, { group, resultsPerPage, type})
 }
 
 const appRouter = app => {
   app.get('/', (req, res) => {
-    res.send(`
-      <h1>Freecycle API</h1>
-      <p>The following RESTful endpoints are available:</p>
-      <ul>
-        <li>/posts/:group</li>
-        <li>/posts/:group/:type</li>
-        <li>/post/:group/:id</li>
-      </ul>
-      <p>where :group, :type and :id are variables determining the group name, post type ("offer", "wanted" or "all") and post id.</p>
-      `)
+    res.send(USAGE)
   })
 
   app.get('/posts/:group', (req, res) => getPosts(req.params, res))
-  app.get('/posts/:group/:type', (req, res) => getPosts(req.params, res))
+  app.get('/posts/:group/:resultsPerPage', (req, res) => getPosts(req.params, res))
+  app.get('/posts/:group/:resultsPerPage/:type', (req, res) => getPosts(req.params, res))
 
   app.get('/post/:group/:id', (req, res) => {
     const { id, group } = req.params
