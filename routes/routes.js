@@ -19,6 +19,19 @@ const getPosts = ({ group, type = freecycle.TYPE.offer }, res) => {
 }
 
 const appRouter = app => {
+  app.get('/', (req, res) => {
+    res.send(`
+      <h1>Freecycle API</h1>
+      <p>The following RESTful endpoints are available:</p>
+      <ul>
+        <li>/posts/:group</li>
+        <li>/posts/:group/:type</li>
+        <li>/post/:group/:id</li>
+      </ul>
+      <p>where :group, :type and :id are variables determining the group name, post type ("offer", "wanted" or "all") and post id.</p>
+      `)
+  })
+
   app.get('/posts/:group', (req, res) => getPosts(req.params, res))
   app.get('/posts/:group/:type', (req, res) => getPosts(req.params, res))
 
